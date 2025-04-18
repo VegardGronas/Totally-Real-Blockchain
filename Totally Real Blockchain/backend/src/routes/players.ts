@@ -1,5 +1,9 @@
 import express from 'express';
-import { getAllUsers, User, createUser, getUserByUserName } from '../data/userdatabase.ts';  // Import functions from database
+import { getAllUsers } from '../data/userdatabase.ts';  // Import functions from database
+import { getUserByWallet } from '../data/userdatabase.ts';
+// src/data/userdatabase.ts
+import type { User } from '../types/types.ts';  // No .ts extension needed
+import { createUser } from '../data/userdatabase.ts';
 import bcrypt from 'bcrypt'; 
 
 const router = express.Router();
@@ -9,7 +13,7 @@ router.post('/register', async (req, res) => {
     const { userName, password }: User = req.body as User;  // Type assertion to make req.body a UserRequest
   
     // Check if username already exists
-    const existingUser = getUserByUserName(userName);
+    const existingUser = getUserByWallet(userName);
     if (existingUser) {
       return res.status(400).json({ message: 'Username already exists' });
     }
@@ -31,7 +35,7 @@ router.post('/login', async (req, res) => {
     const { userName, password }: User = req.body as User;
   
     // Find user by username
-    const user = getUserByUserName(userName);
+    const user = getUserByWallet(userName);
   
     if (!user) {
       return res.status(401).json({ message: 'Invalid username or password' });
@@ -55,10 +59,10 @@ router.post('/login', async (req, res) => {
   
 
 // GET /players/:username - Get user details (wallet)
-router.get('/:username', (req, res) => {
-  const { username } = req.params;
+router.get('/:wallet', (req, res) => {
+  const { wallet } = req.params;
 
-  const user = getUserByUserName(username);
+  const user = getUserByWallet(wallet);
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }

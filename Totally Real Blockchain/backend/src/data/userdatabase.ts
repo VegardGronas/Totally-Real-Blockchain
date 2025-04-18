@@ -2,15 +2,9 @@
 import Database from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';  // Import UUID for generating unique wallet IDs
 import bcrypt from 'bcrypt';  // Import bcrypt for password hashing
+// src/data/userdatabase.ts
+import type { User } from '../types/types.ts';  // No .ts extension needed
 
-// src/types/user.ts
-export interface User {
-    id: number;
-    userName: string;
-    password: string;
-    wallet: string;
-}
-  
 const db = new Database('game.db', { verbose: console.log });
 
 // Function to create a user
@@ -29,10 +23,10 @@ export async function createUser(userName: string, password: string) {
     return wallet;  // Return the generated wallet address
 }
 
-export function getUserByUserName(userName: string): User | undefined {
-    const select = db.prepare('SELECT * FROM user WHERE userName = ?');
-    return select.get(userName) as User | undefined;  // Type assertion here
-}
+export function getUserByWallet(wallet: string): User | undefined {
+    const select = db.prepare('SELECT * FROM user WHERE wallet = ?');
+    return select.get(wallet) as User | undefined;
+}  
 
 // Function to get all users
 export function getAllUsers() {
