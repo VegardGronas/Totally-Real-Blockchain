@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",          // Compile to ES2020
+    "module": "ESNext",          // Use ES Modules
+    "moduleResolution": "Node",  // Use Node.js resolution strategy
+    "strict": true,              // Enable strict type checking
+    "esModuleInterop": true,     // Allow default imports from non-ESM modules
+    "skipLibCheck": true,        // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true,  // Ensure consistent file name casing
+    "outDir": "dist",            // Output directory for compiled files
+    "resolveJsonModule": true,   // Allow importing JSON files
+    "allowJs": false,            // Do not allow JavaScript files
+    "baseUrl": ".",              // Base URL for relative imports
+    "paths": {                   // Add path mappings (optional)
+      "*": ["node_modules/*", "src/types/*"]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*"],  // Include all files in the src directory
+  "exclude": ["**/*.spec.ts"]  // Exclude test files (optional)
+}
