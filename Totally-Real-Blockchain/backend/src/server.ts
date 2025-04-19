@@ -6,6 +6,9 @@ import playerRoutes from './routes/players.ts';  // Import player routes
 import walletsRoutes from './routes/wallets.ts';
 import { setupDatabase } from './db-setup.ts';
 import { swaggerUi, specs } from './swagger.ts';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '8080', 10);  // Convert to number
