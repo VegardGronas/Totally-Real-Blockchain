@@ -18,4 +18,12 @@ interface WalletCoinBalance {
     updatedAt: number;
 }
 
-export type { User, Wallet, WalletCoinBalance };
+interface TwatterPost {
+    id: number;
+    userName: string;
+    header: string;
+    content: string;
+    createdAt: number;
+}  
+
+export type { User, Wallet, WalletCoinBalance, TwatterPost };

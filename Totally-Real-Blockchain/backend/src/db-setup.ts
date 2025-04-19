@@ -79,5 +79,16 @@ export function setupDatabase() {
       );
     `).run();
 
+    db.prepare(`
+      CREATE TABLE IF NOT EXISTS twatter_post (
+        id INTEGER PRIMARY KEY,
+        userName TEXT NOT NULL,
+        header TEXT NOT NULL,
+        content TEXT NOT NULL,
+        createdAt INTEGER DEFAULT (strftime('%s', 'now')),
+        FOREIGN KEY(userName) REFERENCES user(userName) ON DELETE CASCADE
+      );
+    `).run();    
+
     console.log('Database setup complete.');
 }

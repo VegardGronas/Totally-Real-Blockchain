@@ -4,6 +4,7 @@ import cors from 'cors';
 import coinRoutes from './routes/coins.ts';
 import playerRoutes from './routes/users.ts';  // Import player routes
 import walletsRoutes from './routes/wallets.ts';
+import twatterRoutes from './routes/twatter.ts';
 import { setupDatabase } from './db-setup.ts';
 import { swaggerUi, specs } from './swagger.ts';
 import dotenv from 'dotenv';
@@ -28,6 +29,8 @@ app.use('/coins', coinRoutes);
 app.use('/users', playerRoutes);  // Add player routes here
 
 app.use('/wallets', walletsRoutes);
+
+app.use('/twatter', twatterRoutes);
 
 // Listen on all interfaces (0.0.0.0) to allow access from other devices in the local network
 app.listen(PORT, '0.0.0.0', () => {
