@@ -1,5 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
+import './pages/login';
+import './pages/register';
+import './pages/dashboard';
+import './pages/twatter';
+import './pages/market';
 
 function App() {
   return (
