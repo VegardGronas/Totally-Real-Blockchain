@@ -6,6 +6,43 @@ import type { TwatterPost } from '../types/types.ts';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /twatter/create:
+ *   post:
+ *     summary: Create a new Twatter post
+ *     description: Allows an authenticated user to create a new Twatter post.
+ *     tags:
+ *       - Twatter
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - header
+ *               - content
+ *             properties:
+ *               header:
+ *                 type: string
+ *                 example: "Exciting News!"
+ *               content:
+ *                 type: string
+ *                 example: "Just launched my first coin on Totally Real Blockchain 🚀"
+ *     responses:
+ *       201:
+ *         description: Post created successfully
+ *       401:
+ *         description: Unauthorized (no or invalid token)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Failed to create post
+*/
+
 router.post('/create', async (req, res) => {
     const authHeader = req.headers.authorization;
     const { header, content } = req.body;
@@ -31,6 +68,55 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ message: 'Failed to create post' });
     }
 });
+
+/**
+ * @swagger
+ * /twatter/get/all:
+ *   get:
+ *     summary: Get all Twatter posts from the authenticated user
+ *     description: Returns a list of all posts created by the authenticated user.
+ *     tags:
+ *       - Twatter
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Posts received successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Posts received successfully
+ *                 posts:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       userName:
+ *                         type: string
+ *                         example: johndoe
+ *                       header:
+ *                         type: string
+ *                         example: My first post
+ *                       content:
+ *                         type: string
+ *                         example: Hello Twatter!
+ *                       createdAt:
+ *                         type: integer
+ *                         example: 1714932312
+ *       401:
+ *         description: Unauthorized (no or invalid token)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Failed to retrieve posts
+*/
 
 router.get('/get/all', async (req, res) => {
     const authHeader = req.headers.authorization;
