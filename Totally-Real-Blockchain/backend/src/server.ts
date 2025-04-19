@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import coinRoutes from './routes/coins.ts';
-import playerRoutes from './routes/players.ts';  // Import player routes
+import playerRoutes from './routes/users.ts';  // Import player routes
 import walletsRoutes from './routes/wallets.ts';
 import { setupDatabase } from './db-setup.ts';
 import { swaggerUi, specs } from './swagger.ts';
@@ -25,7 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/coins', coinRoutes);
 
 // Use the player routes for the /players endpoint
-app.use('/players', playerRoutes);  // Add player routes here
+app.use('/users', playerRoutes);  // Add player routes here
 
 app.use('/wallets', walletsRoutes);
 

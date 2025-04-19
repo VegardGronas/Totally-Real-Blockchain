@@ -1,4 +1,3 @@
-// swagger.ts
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
@@ -9,8 +8,22 @@ const options = {
       title: 'Totally Real Blockchain API',
       version: '1.0.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ['./src/routes/*.ts'], // <-- point to your route files
+  apis: ['./src/routes/*.ts'],
 };
 
 const specs = swaggerJsdoc(options);

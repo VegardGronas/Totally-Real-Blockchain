@@ -27,28 +27,30 @@ export function setupDatabase() {
       );
     `).run();
 
-    // User wallet (tracks coin holdings)
-    db.prepare(`
-      CREATE TABLE IF NOT EXISTS wallets (
-        wallet_id TEXT PRIMARY KEY,  -- Make wallet_id a unique string identifier
-        user_id INTEGER NOT NULL,
-        amount REAL DEFAULT 0,
-        createdAt INTEGER DEFAULT (strftime('%s', 'now')),
-        FOREIGN KEY(user_id) REFERENCES user(id) ON DELETE CASCADE
-      );
-    `).run();
+      // User wallet (tracks coin holdings)
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS wallets (
+          wallet_id TEXT PRIMARY KEY,
+          userName TEXT NOT NULL,
+          amount REAL DEFAULT 0,
+          createdAt INTEGER DEFAULT (strftime('%s', 'now')),
+          FOREIGN KEY(userName) REFERENCES user(userName) ON DELETE CASCADE
+        );
+      `).run();    
 
-    db.prepare(`
-      CREATE TABLE IF NOT EXISTS wallet_coin_balances (
-        id INTEGER PRIMARY KEY,
-        wallet_id INTEGER NOT NULL,
-        coin_id INTEGER NOT NULL,
-        updatedAt INTEGER DEFAULT (strftime('%s', 'now')),
-        FOREIGN KEY(wallet_id) REFERENCES wallets(id) ON DELETE CASCADE,
-        FOREIGN KEY(coin_id) REFERENCES coins(id) ON DELETE CASCADE,
-        UNIQUE(wallet_id, coin_id)
-      );
-    `).run();
+      // Coin balances inside wallets
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS wallet_coin_balances (
+          id INTEGER PRIMARY KEY,
+          wallet_id TEXT NOT NULL,
+          coin_id INTEGER NOT NULL,
+          updatedAt INTEGER DEFAULT (strftime('%s', 'now')),
+          FOREIGN KEY(wallet_id) REFERENCES wallets(wallet_id) ON DELETE CASCADE,
+          FOREIGN KEY(coin_id) REFERENCES coins(id) ON DELETE CASCADE,
+          UNIQUE(wallet_id, coin_id)
+        );
+      `).run();
+
 
     // Transactions log
     db.prepare(`

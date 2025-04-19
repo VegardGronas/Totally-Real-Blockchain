@@ -2,7 +2,7 @@ import express from 'express';
 import { getUserByUserName } from '../data/userdatabase.ts';
 // src/data/userdatabase.ts
 import type { User } from '../types/types.ts';  // No .ts extension needed
-import { createUser } from '../data/userdatabase.ts';
+import { createUser, createWallet } from '../data/userdatabase.ts';
 import bcrypt from 'bcrypt'; 
 import jwt from 'jsonwebtoken';
 
@@ -10,18 +10,21 @@ const router = express.Router();
 
 /**
  * @swagger
- * /players/register:
+ * /users/register:
  *   post:
  *     summary: Register a new player
- *     description: Creates a new user and wallet.
+ *     description: Creates a new user with a wallet that starts with 1000 in balance.
  *     tags:
- *       - Players
+ *       - users
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userName
+ *               - password
  *             properties:
  *               userName:
  *                 type: string
@@ -31,7 +34,7 @@ const router = express.Router();
  *                 example: 'password123'
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User and wallet created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -45,9 +48,26 @@ const router = express.Router();
  *                   example: 'johnDoe'
  *       400:
  *         description: Username already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Username already exists'
  *       500:
  *         description: Error creating user
-*/
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Error creating user'
+ */
+
 
 router.post('/register', async (req, res) => {
   const { userName, password }: User = req.body as User;  // Type assertion to make req.body a UserRequest
@@ -65,6 +85,9 @@ router.post('/register', async (req, res) => {
 
     console.log("Waiting");
 
+    //Create a default start wallet for the user with 1000 in blanace
+    createWallet(userName, 1000);
+
     // Respond with success and the wallet address
     res.status(201).json({ message: 'User created successfully', userName});
   } catch (error) {
@@ -75,18 +98,21 @@ router.post('/register', async (req, res) => {
 
 /**
  * @swagger
- * /players/login:
+ * /users/login:
  *   post:
- *     summary: Login to an account
- *     description: Authenticates the user and returns a JWT token.
+ *     summary: Log in a player
+ *     description: Authenticates a user and returns a JWT token.
  *     tags:
- *       - Players
+ *       - users
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userName
+ *               - password
  *             properties:
  *               userName:
  *                 type: string
@@ -96,7 +122,7 @@ router.post('/register', async (req, res) => {
  *                 example: 'password123'
  *     responses:
  *       200:
- *         description: Login successful, returns JWT token
+ *         description: Login successful
  *         content:
  *           application/json:
  *             schema:
@@ -107,12 +133,29 @@ router.post('/register', async (req, res) => {
  *                   example: 'Login successful'
  *                 token:
  *                   type: string
- *                   example: 'jwt_token_example'
+ *                   example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6...'
  *       401:
  *         description: Invalid username or password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Invalid username or password'
  *       500:
  *         description: Error during login
-*/
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Error during login'
+ */
+
 router.post('/login', async (req, res) => {
   const { userName, password } = req.body as User;
 
@@ -145,58 +188,59 @@ router.post('/login', async (req, res) => {
 
 /**
  * @swagger
- * /players/user:
- *   post:
- *     summary: Get user details
- *     description: Retrieves user details by using JWT token in the Authorization header.
+ * /users/get:
+ *   get:
+ *     summary: Get current user
+ *     description: Retrieves the current authenticated user using the provided JWT token.
  *     tags:
- *       - Players
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userName:
- *                 type: string
- *                 example: 'johnDoe'
- *               password:
- *                 type: string
- *                 example: 'password123'
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *           example: 'Bearer jwt_token_example'
+ *       - users
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Returns the user details
+ *         description: Successfully retrieved user
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: integer
- *                       example: 1
- *                     userName:
- *                       type: string
- *                       example: 'johnDoe'xXXX
+ *                   type: string
+ *                   example: 'johnDoe'
  *       401:
- *         description: Unauthorized, invalid or missing token
+ *         description: No token provided or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'No token provided'
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'User not found'
  *       500:
  *         description: Error during loading user
-*/
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 'Error during loading user'
+ */
 
-router.post('/user', async (req, res) => {
+
+router.get('/get', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];  // Get the token from Authorization header
   
   if (!token) {

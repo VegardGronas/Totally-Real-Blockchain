@@ -38,16 +38,16 @@ export function getUserById(userId: string) : User | undefined {
     return select.get(userId) as User || undefined;
 }
 
-export function createWallet(userId: string, amount: number = 0) {
+export function createWallet(username: string, amount: number = 0) {
     const walletId = generateWalletId();  // Generate the wallet ID
     
     // Insert the new wallet with user_id and wallet_id
     const walletInsert = db.prepare(`
-      INSERT INTO wallets (user_id, wallet_id, amount)
+      INSERT INTO wallets (userName, wallet_id, amount)
       VALUES (?, ?, ?)
     `);
     
-    walletInsert.run(userId, walletId, amount);
+    walletInsert.run(username, walletId, amount);
   
     // Insert the default 0 balance for each coin directly into the wallet_coin_balances table
     const insertBalance = db.prepare(`
@@ -64,7 +64,7 @@ export function createWallet(userId: string, amount: number = 0) {
 export function getWalletWithCoinBalances(userId: string) {
     // Fetch the wallet data (asserting the result type)
     const selectWallet = db.prepare(`
-      SELECT * FROM wallets WHERE user_id = ?
+      SELECT * FROM wallets WHERE userName = ?
     `);
   
     const wallet = selectWallet.get(userId) as Wallet | undefined;  // Assert that it is either a Wallet or undefined
