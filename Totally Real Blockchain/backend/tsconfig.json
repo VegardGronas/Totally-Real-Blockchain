@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleDetection": "force",
+      "outDir": "dist",
+      "resolveJsonModule": true,
+      "allowJs": false,
+      "allowImportingTsExtensions": true  // Added this line
+    },
+    "include": ["src"]
+}  
