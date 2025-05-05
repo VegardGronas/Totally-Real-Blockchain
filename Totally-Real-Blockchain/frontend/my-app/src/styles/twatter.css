@@ -1,0 +1,66 @@
+.twatter-page {
+    max-width: 600px;
+    margin: auto;
+    padding: 2rem;
+  }
+  
+
+  .twatter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .twatter-form input,
+  .twatter-form textarea {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+  }
+  
+  .twatter-form textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .twatter-form button {
+    padding: 0.7rem;
+    background-color: #2196f3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .twatter-form button:hover {
+    background-color: #1e88e5;
+  }
+  
+  .twatter-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .twatter-post {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .twatter-post h4 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .twatter-post span {
+    display: block;
+    font-size: 0.8rem;
+  }
+  
+  .timestamp {
+    margin-top: 0.3rem;
+  }
+  

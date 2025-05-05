@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import '../styles/register.css'; // Import your CSS file for styling
+import { useAuth } from '../context/authContext'; // Import useAuth
+import '../styles/register.css';
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
+  const { login } = useAuth(); // Access login function from context
   const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/user/login', {
+      const response = await fetch('http://192.168.1.8:8080/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userName, password }),
@@ -18,11 +22,10 @@ const Register: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Login successful!');
-        localStorage.setItem('token', data.token);
-        // Redirect to dashboard or next step
+        login(data.token); // Call login method from context
+        alert('Registration successful!');
       } else {
-        alert(data.message || 'Login failed');
+        alert(data.message || 'Registration failed');
       }
     } catch (err) {
       alert('Error connecting to server');
@@ -30,9 +33,13 @@ const Register: React.FC = () => {
     }
   };
 
+  const goToLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="register-page">
-      <h1>Login</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit} className="register-form">
         <input
           type="text"
@@ -48,14 +55,12 @@ const Register: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
+
+        
+        <button type="submit">Register</button>
+
+        <p>Already have an account?</p>
+        <button type='button' onClick={goToLogin}>Login</button>
       </form>
     </div>
   );

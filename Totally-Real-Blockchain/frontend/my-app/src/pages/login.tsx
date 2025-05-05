@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import '../styles/register.css'; // Import your CSS file for styling
+import { useAuth } from '../context/authContext';
+import '../styles/register.css';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const [userName, setUserName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/user/login', {
+      const response = await fetch('http://192.168.1.8:8080/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userName, password }),
@@ -18,9 +22,8 @@ const Login: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Login successful!');
-        localStorage.setItem('token', data.token);
-        // Redirect to dashboard or next step
+        login(data.token);
+        navigate('/');
       } else {
         alert(data.message || 'Login failed');
       }
@@ -28,6 +31,10 @@ const Login: React.FC = () => {
       alert('Error connecting to server');
       console.error(err);
     }
+  };
+
+  const goToRegister = () => {
+    navigate('/register');
   };
 
   return (
@@ -49,6 +56,9 @@ const Login: React.FC = () => {
           required
         />
         <button type="submit">Login</button>
+
+        <p>Dont have an account?</p>
+        <button type="button" onClick={goToRegister}>Register</button>
       </form>
     </div>
   );

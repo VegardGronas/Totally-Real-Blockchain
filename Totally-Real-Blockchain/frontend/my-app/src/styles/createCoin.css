@@ -1,0 +1,37 @@
+.create-coin-page {
+    max-width: 500px;
+    margin: auto;
+    padding: 2rem;
+  }
+  
+  .create-coin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .create-coin-form input[type="text"],
+  .create-coin-form input[type="number"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .create-coin-form label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .create-coin-form button {
+    padding: 0.7rem;
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .create-coin-form button:hover {
+    background-color: #45a049;
+  }
+  

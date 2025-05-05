@@ -1,18 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './styles/main.css';
+import Navbar from './components/navbar';
 import Login from './pages/login';
 import Register from './pages/register';
-import Navbar from './components/navbar';
+import Dashboard from './pages/dashboard';
+import CreateCoin from './pages/createCoin';
+import Twatter from './pages/twatter';
 
-function App() {
+const App: React.FC = () => {
+  const token = localStorage.getItem('token');
+
   return (
-    <div className="App">
+    <Router>
       <Navbar />
-      <Login />
-    </div>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        {/* Protected routes */}
+        <Route
+          path="/"
+          element={token ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/create-coin"
+          element={token ? <CreateCoin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/twatter"
+          element={token ? <Twatter /> : <Navigate to="/login" />}
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
